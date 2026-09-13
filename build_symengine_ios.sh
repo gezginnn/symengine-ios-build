@@ -74,12 +74,16 @@ build_gmp_mpfr_for_arch() {
             -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
             -DGMP_INCLUDE_DIR="${PREFIX}/include" \
             -DGMP_LIBRARY="${PREFIX}/lib/libgmp.a" \
-            -DMPFR_INCLUDES="${PREFIX}/include" \
+            -DMPFR_INCLUDE_DIR="${PREFIX}/include" \
             -DMPFR_LIBRARIES="${PREFIX}/lib/libmpfr.a" \
+            -DMPFR_INCLUDE_DIRS="${PREFIX}/include" \
             -DWITH_MPFR=yes \
             -DBUILD_SHARED_LIBS=no \
             -DBUILD_TESTS=no \
             -DBUILD_BENCHMARKS=no \
+            -DCMAKE_FIND_ROOT_PATH="${PREFIX}" \
+            -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH \
+            -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH \
             -DCMAKE_BUILD_TYPE=Release
         cmake --build . --config Release -j$(sysctl -n hw.ncpu)
         cmake --install .
