@@ -18,8 +18,8 @@ mkdir -p "$OUTPUT_DIR"
 cd "$WORKDIR"
 
 echo "===== 1) Kaynak kodları indiriliyor ====="
-[ -f "gmp-${GMP_VERSION}.tar.xz" ] || curl -L -o "gmp-${GMP_VERSION}.tar.xz" "https://gmplib.org/download/gmp/gmp-${GMP_VERSION}.tar.xz"
-[ -f "mpfr-${MPFR_VERSION}.tar.xz" ] || curl -L -o "mpfr-${MPFR_VERSION}.tar.xz" "https://www.mpfr.org/mpfr-current/mpfr-${MPFR_VERSION}.tar.xz"
+[ -f "gmp-${GMP_VERSION}.tar.xz" ] || curl -L --retry 5 --retry-delay 5 --connect-timeout 20 -o "gmp-${GMP_VERSION}.tar.xz" "https://ftp.gnu.org/gnu/gmp/gmp-${GMP_VERSION}.tar.xz"
+[ -f "mpfr-${MPFR_VERSION}.tar.xz" ] || curl -L --retry 5 --retry-delay 5 --connect-timeout 20 -o "mpfr-${MPFR_VERSION}.tar.xz" "https://ftp.gnu.org/gnu/mpfr/mpfr-${MPFR_VERSION}.tar.xz"
 [ -d "symengine" ] || git clone --depth 1 --branch "${SYMENGINE_TAG}" https://github.com/symengine/symengine.git
 
 echo "===== 2) Ortak fonksiyon: bir mimari için GMP+MPFR derle ====="
