@@ -1,0 +1,40 @@
+name: Build SymEngine iOS XCFramework
+
+on:
+  workflow_dispatch:   # Actions sekmesinden elle tetiklenir
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    runs-on: macos-15
+    timeout-minutes: 120
+
+    steps:
+      - name: Kodu çek
+        uses: actions/checkout@v4
+
+      - name: SymEngine + GMP + MPFR'yi iOS için derle
+        run: |
+          chmod +x ./build_symengine_ios.sh
+          ./build_symengine_ios.sh
+
+      - name: xcframework'ü zip'le
+        run: |
+          cd output
+          zip -r SymEngine.xcframework.zip SymEngine.xcframework
+
+      - name: Sürüm etiketi oluştur
+        id: tag
+        run: echo "tag=v$(date +%Y%m%d-%H%M%S)" >> "$GITHUB_OUTPUT"
+
+      - name: GitHub Release olarak yayınla
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: SymEngine iOS XCFramework ${{ steps.tag.outputs.tag }}
+          files: output/SymEngine.xcframework.zip
+          body: |
+            SymEngine + GMP + MPFR iOS xcframework (cihaz arm64 + simülatör arm64/x86_64).
+            Otomatik üretildi, commit: ${{ github.sha }}
